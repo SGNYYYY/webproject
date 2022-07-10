@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>可视化展示</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+   <h1>性别分布饼状图</h1>
+   <div id="pie-gender" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+       var chartDomGender = document.getElementById('pie-gender');
+       var myChartGender = echarts.init(chartDomGender);
+       $.getJSON("./queryUserGender",function(values){
+           var bufData = []
+           for(var i=0;i<values.data.length;i++){
+               var jsonData ={}
+               jsonData.value = values.data[i]['num']
+               var gender = values.data[i]['gender']
+               if(gender === "1"){
+                   jsonData.name = "男"
+               }else if(gender === "0"){
+                   jsonData.name = "女"
+               }else{
+                   jsonData.name = "未知"
+               }
+
+               bufData.push(jsonData)
+           }
+           option = {
+               title: {
+                   text: '购物者性别分布',
+                   left: 'center'
+               },
+               tooltip: {
+                   trigger: 'item'
+               },
+               legend: {
+                   orient: 'vertical',
+                   left: 'left'
+               },
+               series: [
+                   {
+                       name: 'Access From',
+                       type: 'pie',
+                       radius: '50%',
+                       data: bufData,
+                       emphasis: {
+                           itemStyle: {
+                               shadowBlur: 10,
+                               shadowOffsetX: 0,
+                               shadowColor: 'rgba(0, 0, 0, 0.5)'
+                           }
+                       }
+                   }
+               ]
+           };
+
+           option && myChartGender.setOption(option);
+
+       })
+   </script>
+   <h1>行为分布饼状图</h1>
+   <div id="pie-action" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+       var chartDomAction = document.getElementById('pie-action');
+       var myChartAction = echarts.init(chartDomAction);
+       $.getJSON("./queryUserAction",function(values){
+           var bufData = []
+           console.log(values.data)
+           for(var i=0;i<values.data.length;i++){
+               var jsonData ={}
+               jsonData.value = values.data[i].purchaseTimes
+               jsonData.name = "购买次数"
+               bufData.push(jsonData)
+               jsonData ={}
+               jsonData.value = values.data[i].favouriteTimes
+               jsonData.name = "收藏次数"
+               bufData.push(jsonData)
+               jsonData ={}
+               jsonData.value = values.data[i].oneClicksTimes
+               jsonData.name = "点击次数"
+               bufData.push(jsonData)
+               jsonData ={}
+               jsonData.value = values.data[i].shoppingCartsTimes
+               jsonData.name = "加入购物车次数"
+               bufData.push(jsonData)
+           }
+           option = {
+               color: ['#c23531','#2f4554', '#61a0a8'],
+               tooltip: {
+                   trigger: 'item'
+               },
+               legend: {
+                   top: '5%',
+                   left: 'center'
+               },
+               series: [
+                   {
+                       name: 'Access From',
+                       type: 'pie',
+                       radius: ['40%', '70%'],
+                       avoidLabelOverlap: false,
+                       itemStyle: {
+                           borderRadius: 10,
+                           borderColor: '#fff',
+                           borderWidth: 2
+                       },
+                       label: {
+                           show: false,
+                           position: 'center'
+                       },
+                       emphasis: {
+                           label: {
+                               show: true,
+                               fontSize: '40',
+                               fontWeight: 'bold'
+                           }
+                       },
+                       labelLine: {
+                           show: false
+                       },
+                       data: bufData
+                   }
+               ]
+           };
+           option && myChartAction.setOption(option);
+       })
+   </script>
+   <h1>年龄占比</h1>
+   <div id="bar-age" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+       var chartDomAge = document.getElementById('bar-age');
+       var myChartAge = echarts.init(chartDomAge);
+       $.getJSON("./queryUserAge",function(values){
+           var xAxis = []
+           var yAxis = []
+           var zAxis = []
+           var totalNum = 0
+           console.log(values.data)
+           for(var i=0;i<values.data.length;i++){
+               totalNum += values.data[i]["num"]
+           }
+           var over50 = 0
+           for(var i=0;i<values.data.length;i++){
+               if(values.data[i]["age_range"] === "0") {
+                   xAxis.push("未知")
+                   yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+                   zAxis.push(values.data[i]["num"])
+               }else if(values.data[i]["age_range"] === "1"){
+                   xAxis.push("<18")
+                   yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+                   zAxis.push(values.data[i]["num"])
+               }else if(values.data[i]["age_range"] === "2"){
+                   xAxis.push("18-24")
+                   yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+                   zAxis.push(values.data[i]["num"])
+               }else if(values.data[i]["age_range"] === "3"){
+                   xAxis.push("25-29")
+                   yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+                   zAxis.push(values.data[i]["num"])
+               }else if(values.data[i]["age_range"] === "4"){
+                   xAxis.push("30-34")
+                   yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+                   zAxis.push(values.data[i]["num"])
+               }else if(values.data[i]["age_range"] === "5"){
+                   xAxis.push("35-39")
+                   yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+                   zAxis.push(values.data[i]["num"])
+               }else if(values.data[i]["age_range"] === "6"){
+                   xAxis.push("40-49")
+                   yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+                   zAxis.push(values.data[i]["num"])
+               }else{
+                   over50 += values.data[i]["num"]
+               }
+           }
+           xAxis.push(">50")
+           yAxis.push(((over50/totalNum)*100).toFixed(2))
+           zAxis.push(over50)
+           option = {
+               tooltip : {
+                   trigger: 'axis',
+                   axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                       type : 'shadow',        // 默认为直线，可选为：'line' | 'shadow'
+                   },
+                   formatter: '{c}%'
+               },
+
+               xAxis: {
+                   type: 'category',
+                   data: xAxis
+               },
+               yAxis: {
+                   type: 'value',
+                   axisLabel: {
+                       show: true,
+                       interval: 'auto',
+                       formatter: '{value} %'
+                   },
+                   show: true
+               },
+               series: [
+                   {
+                       name: 'Access From',
+                       emphasis: {
+                           label: {
+                               show: true,
+                               fontSize: '40',
+                               fontWeight: 'bold'
+                           }
+                       },
+                       data: yAxis,
+                       type: 'bar',
+                       itemStyle: {
+                           normal: {
+                               label: {
+                                   show: true, //开启显示
+                                   position: 'top', //在上方显示
+                                   formatter:'{c}%',
+                                   color: '#00388d'
+                               },
+                           }
+                       },
+                   }
+               ]
+           };
+           option && myChartAge.setOption(option);
+       })
+   </script>
+
+</body>
+</html>

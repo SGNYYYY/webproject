@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.software.dao.UserMutualEntityMapper">
+
+  <!--查询用户的性别-->
+  <select id="queryUserGender" resultType="map">
+    select gender, count(*) as num
+    from skycat
+    group by gender
+  </select>
+
+<!--  查询用户的行为-->
+  <select id="queryUserAction" resultType="com.software.beans.UserMutualEntity">
+    select sum(one_clicks) as one_clicks_times, sum(shopping_carts) as shopping_carts_times, sum(purchase_times) as purchase_times, sum(favourite_times) as favourite_times
+    from skycat
+  </select>
+  <!--查询用户年龄-->
+  <select id="queryUserAge" resultType="map">
+    select age_range,count(*) as num
+    from skycat
+    group by age_range
+  </select>
+
+
+
+</mapper>
