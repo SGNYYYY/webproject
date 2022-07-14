@@ -1,739 +1,646 @@
-// 柱状图1模块
+// 用户年龄占比
 (function() {
   // 实例化对象
-  var myChart = echarts.init(document.querySelector(".bar .chart"));
-  // 指定配置和数据
-  var option = {
-    color: ["#2f89cf"],
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        // 坐标轴指示器，坐标轴触发有效
-        type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+  var chartDom = document.getElementById('bar-age');
+  var myChart = echarts.init(chartDom);
+  $.getJSON("./queryUserAge",function(values){
+    var xAxis = []
+    var yAxis = []
+    var zAxis = []
+    var totalNum = 0
+    console.log(values.data)
+    for(var i=0;i<values.data.length;i++){
+      totalNum += values.data[i]["num"]
+    }
+    var over50 = 0
+    for(var i=0;i<values.data.length;i++){
+      if(values.data[i]["age_range"] === "0") {
+        xAxis.push("未知")
+        yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+        zAxis.push(values.data[i]["num"])
+      }else if(values.data[i]["age_range"] === "1"){
+        xAxis.push("<18")
+        yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+        zAxis.push(values.data[i]["num"])
+      }else if(values.data[i]["age_range"] === "2"){
+        xAxis.push("18-24")
+        yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+        zAxis.push(values.data[i]["num"])
+      }else if(values.data[i]["age_range"] === "3"){
+        xAxis.push("25-29")
+        yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+        zAxis.push(values.data[i]["num"])
+      }else if(values.data[i]["age_range"] === "4"){
+        xAxis.push("30-34")
+        yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+        zAxis.push(values.data[i]["num"])
+      }else if(values.data[i]["age_range"] === "5"){
+        xAxis.push("35-39")
+        yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+        zAxis.push(values.data[i]["num"])
+      }else if(values.data[i]["age_range"] === "6"){
+        xAxis.push("40-49")
+        yAxis.push(((values.data[i]["num"]/totalNum)*100).toFixed(2))
+        zAxis.push(values.data[i]["num"])
+      }else{
+        over50 += values.data[i]["num"]
       }
-    },
-    grid: {
-      left: "0%",
-      top: "10px",
-      right: "0%",
-      bottom: "4%",
-      containLabel: true
-    },
-    xAxis: [
-      {
-        type: "category",
-        data: [
-          "0~20",
-          "20~30",
-          "30~40",
-          "40~60",
-          "60+"
-        ],
+    }
+    xAxis.push(">50")
+    yAxis.push(((over50/totalNum)*100).toFixed(2))
+    zAxis.push(over50)
+    option = {
+      color: ["#2f89cf"],
+      tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+          type : 'shadow',        // 默认为直线，可选为：'line' | 'shadow'
+        },
+        formatter: '{c}%'
+      },
+      grid: {
+            left: "0%",
+            top: "8px",
+            right: "0%",
+            bottom: "6%",
+            containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        data: xAxis,
+        name: '年龄段',
         axisTick: {
           alignWithLabel: true
         },
         axisLabel: {
           textStyle: {
             color: "rgba(255,255,255,.6)",
-            fontSize: "12"
+            fontSize: "9"
           }
         },
         axisLine: {
           show: false
+        },
+        nameLocation:'middle',
+        nameTextStyle:{
+          color:"rgba(255,255,255,.6)",
+          fontSize: 8,
         }
-      }
-    ],
-    yAxis: [
-      {
-        type: "value",
+      },
+      yAxis: {
+        type: 'value',
         axisLabel: {
+          show: true,
+          interval: 'auto',
+          formatter: '{value} %',
           textStyle: {
             color: "rgba(255,255,255,.6)",
             fontSize: "12"
           }
         },
-        axisLine: {
-          lineStyle: {
-            color: "rgba(255,255,255,.1)"
-            // width: 1,
-            // type: "solid"
-          }
-        },
-        splitLine: {
-          lineStyle: {
-            color: "rgba(255,255,255,.1)"
-          }
-        }
-      }
-    ],
-    series: [
-      {
-        name: "直接访问",
-        type: "bar",
-        barWidth: "35%",
-        data: [200, 300, 300, 900, 1500, 1200, 600],
-        itemStyle: {
-          barBorderRadius: 5
-        }
-      }
-    ]
-  };
-
-  // 把配置给实例对象
-  myChart.setOption(option);
-  window.addEventListener("resize", function() {
-    myChart.resize();
-  });
-
-  // 数据变化
-  var dataAll = [
-    { year: "2019", data: [200, 300, 300, 900, 1500, 1200, 600] },
-    { year: "2020", data: [300, 400, 350, 800, 1800, 1400, 700] }
-  ];
-
-  $(".bar h2 ").on("click", "a", function() {
-    option.series[0].data = dataAll[$(this).index()].data;
-    myChart.setOption(option);
-  });
-})();
-
-// 折线图定制
-(function() {
-  // 基于准备好的dom，初始化echarts实例
-  var myChart = echarts.init(document.querySelector(".line .chart"));
-
-  // (1)准备数据
-  var data = {
-    year: [
-      [24, 40, 101, 134, 90, 230],
-      [ 210, 230, 120, 230, 210, 120],
-      [40, 64, 191, 324, 290, 330],
-      [310, 213, 180, 200, 180, 79],
-      [1,2,3,4,5,6]
-    ]
-  };
-
-  // 2. 指定配置和数据
-  var option = {
-    color: ["#00f2f1", "#ed3f35"],
-    tooltip: {
-      // 通过坐标轴来触发
-      trigger: "axis"
-    },
-    legend: {
-      // 距离容器10%
-      right: "10%",
-      // 修饰图例文字的颜色
-      textStyle: {
-        color: "#4c9bfd"
-      }
-      // 如果series 里面设置了name，此时图例组件的data可以省略
-      // data: ["邮件营销", "联盟广告"]
-    },
-    grid: {
-      top: "20%",
-      left: "3%",
-      right: "4%",
-      bottom: "3%",
-      show: true,
-      borderColor: "#012f4a",
-      containLabel: true
-    },
-
-    xAxis: {
-      type: "category",
-      boundaryGap: false,
-      data: [
-        "id1",
-        "id2",
-        "id3",
-        "id4",
-        "id5",
-        "id6"
-      ],
-      // 去除刻度
-      axisTick: {
-        show: false
-      },
-      // 修饰刻度标签的颜色
-      axisLabel: {
-        color: "rgba(255,255,255,.7)"
-      },
-      // 去除x坐标轴的颜色
-      axisLine: {
-        show: false
-      }
-    },
-    yAxis: {
-      type: "value",
-      // 去除刻度
-      axisTick: {
-        show: false
-      },
-      // 修饰刻度标签的颜色
-      axisLabel: {
-        color: "rgba(255,255,255,.7)"
-      },
-      // 修改y轴分割线的颜色
-      splitLine: {
-        lineStyle: {
-          color: "#012f4a"
-        }
-      }
-    },
-    series: [
-      {
-        name: "商品",
-        type: "line",
-        stack: "总量",
-        // 是否让线条圆滑显示
-        smooth: true,
-        data: data.year[0]
-      },
-      {
-        name: "品类",
-        type: "line",
-        stack: "总量",
-        // 是否让线条圆滑显示
-        smooth: true,
-        data: data.year[1]
-      },
-      {
-        name: "品牌",
-        type: "line",
-        stack: "总量",
-        // 是否让线条圆滑显示
-        smooth: true,
-        data: data.year[2]
-      },
-      {
-        name: "商家数量",
-        type: "line",
-        stack: "总量",
-        // 是否让线条圆滑显示
-        smooth: true,
-        data: data.year[3]
-      }
-
-    ]
-  };
-  // 3. 把配置和数据给实例对象
-  myChart.setOption(option);
-
-  // 重新把配置好的新数据给实例对象
-  myChart.setOption(option);
-  window.addEventListener("resize", function() {
-    myChart.resize();
-  });
-})();
-
-// 饼形图定制
-// 折线图定制
-(function() {
-  // 基于准备好的dom，初始化echarts实例
-  var myChart = echarts.init(document.querySelector(".pie .chart"));
-
-  option = {
-    tooltip: {
-      trigger: "item",
-      formatter: "{a} <br/>{b}: {c} ({d}%)",
-      position: function(p) {
-        //其中p为当前鼠标的位置
-        return [p[0] + 10, p[1] - 10];
-      }
-    },
-    legend: {
-      top: "90%",
-      itemWidth: 10,
-      itemHeight: 10,
-      data: ["click", "buy_car", "buy", "collection"],
-      textStyle: {
-        color: "rgba(255,255,255,.5)",
-        fontSize: "12"
-      }
-    },
-    series: [
-      {
-        name: "操作",
-        type: "pie",
-        center: ["50%", "42%"],
-        radius: ["40%", "60%"],
-        color: [
-          "#065aab",
-          "#066eab",
-          "#0682ab",
-          "#0696ab",
-          "#06a0ab",
-          "#06b4ab",
-          "#06c8ab",
-          "#06dcab",
-          "#06f0ab"
-        ],
-        label: { show: false },
-        labelLine: { show: false },
-        data: [
-          { value: 1, name: "click" },
-          { value: 4, name: "buy" },
-          { value: 2, name: "collection" },
-          { value: 2, name: "buy_car" }
-        ]
-      }
-    ]
-  };
-
-  // 使用刚指定的配置项和数据显示图表。
-  myChart.setOption(option);
-  window.addEventListener("resize", function() {
-    myChart.resize();
-  });
-})();
-// 学习进度柱状图模块
-(function() {
-  // 基于准备好的dom，初始化echarts实例
-  var myChart = echarts.init(document.querySelector(".bar1 .chart"));
-
-  var data = [70, 34, 60, 78, 69];
-  var titlename = ["男", "女"];
-  var valdata = [702, 350];
-  var myColor = ["#1089E7", "#F57474", "#56D0E3", "#F8B448", "#8B78F6"];
-  option = {
-    //图标位置
-    grid: {
-      top: "10%",
-      left: "22%",
-      bottom: "10%"
-    },
-    xAxis: {
-      show: false
-    },
-    yAxis: [
-      {
         show: true,
-        data: titlename,
-        inverse: true,
-        axisLine: {
-          show: false
-        },
-        splitLine: {
-          show: false
-        },
+        name: '占比',
+              axisLine: {
+                lineStyle: {
+                  color: "rgba(255,255,255,.1)"
+                  // width: 1,
+                  // type: "solid"
+                }
+              },
+              splitLine: {
+                lineStyle: {
+                  color: "rgba(255,255,255,.1)"
+                }
+              }
+      },
+      series: [
+        {
+          name: '用户',
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '40',
+              fontWeight: 'bold'
+            }
+          },
+          data: yAxis,
+          type: 'bar',
+          barWidth: "35%",
+          itemStyle: {
+            barBorderRadius: 5,
+            normal: {
+              label: {
+                show: true, //开启显示
+                position: 'top', //在上方显示
+                formatter:'{c}%',
+                color: "rgba(255,255,255,.6)"
+              },
+            }
+          },
+        }
+      ]
+    };
+    option && myChart.setOption(option);
+    window.addEventListener("resize", function() {
+      myChart.resize();
+    });
+  })
+})();
+
+// 购买数Top10用户行为
+(function() {
+  // 基于准备好的dom，初始化echarts实例
+  var chartDom = document.getElementById("line-userAction");
+  var myChart = echarts.init(chartDom);
+  $.getJSON("./queryUserActionTop5",function(values){
+    var totalLogs = []
+    var oneClicksTimes = []
+    var shoppingCartsTimes = []
+    var purchaseTimes = []
+    var favouriteTimes = []
+    var userId = []
+    for(var i=0;i<values.data.length;i++){
+      var useri = [];
+      totalLogs.push(values.data[i].totalLogs)
+      oneClicksTimes.push(values.data[i].oneClicksTimes)
+      shoppingCartsTimes.push(values.data[i].shoppingCartsTimes)
+      purchaseTimes.push(values.data[i].purchaseTimes)
+      favouriteTimes.push(values.data[i].favouriteTimes)
+      userId.push(values.data[i].userId)
+    }
+    option = {
+      color: ["#00f2f1", "#ed3f35", "#00ff6d", "#ff9ede"],
+      legend: {
+        // 距离容器10%
+        right: "10%",
+        // 修饰图例文字的颜色
+        textStyle: {
+          color: "#4c9bfd"
+        }
+      },
+      tooltip: {
+        trigger: "axis"
+      },
+      grid: {
+        top: "20%",
+        left: "3%",
+        right: "4%",
+        bottom: "3%",
+        show: true,
+        borderColor: "#012f4a",
+        containLabel: true
+      },
+      xAxis: {
+
+        type: 'category' ,
+        name: '用户id',
+        data: userId,
+        boundaryGap: false,
+        // 去除刻度
         axisTick: {
           show: false
         },
+        // 修饰刻度标签的颜色
         axisLabel: {
-          color: "#fff",
-
-          rich: {
-            lg: {
-              backgroundColor: "#339911",
-              color: "#fff",
-              borderRadius: 15,
-              // padding: 5,
-              align: "center",
-              width: 15,
-              height: 15
-            }
-          }
-        }
-      },
-      {
-        show: true,
-        inverse: true,
-        data: valdata,
-        axisLabel: {
+          color: "rgba(255,255,255,.7)",
           textStyle: {
-            fontSize: 12,
-            color: "#fff"
-          }
-        }
-      }
-    ],
-    series: [
-      {
-        name: "条",
-        type: "bar",
-        yAxisIndex: 0,
-        data: data,
-        barCategoryGap: 50,
-        barWidth: 10,
-        itemStyle: {
-          normal: {
-            barBorderRadius: 20,
-            color: function(params) {
-              var num = myColor.length;
-              return myColor[params.dataIndex % num];
-            }
+            fontSize: "9"
           }
         },
-        label: {
-          normal: {
-            show: true,
-            position: "inside",
-            formatter: "{c}%"
-          }
-        }
-      },
-      {
-        name: "框",
-        type: "bar",
-        yAxisIndex: 1,
-        barCategoryGap: 50,
-        data: [100, 100, 100, 100, 100],
-        barWidth: 15,
-        itemStyle: {
-          normal: {
-            color: "none",
-            borderColor: "#00c1de",
-            borderWidth: 3,
-            barBorderRadius: 15
-          }
-        }
-      }
-    ]
-  };
-
-  // 使用刚指定的配置项和数据显示图表。
-  myChart.setOption(option);
-  window.addEventListener("resize", function() {
-    myChart.resize();
-  });
-})();
-// 折线图 优秀作品
-(function() {
-  // 基于准备好的dom，初始化echarts实例
-  var myChart = echarts.init(document.querySelector(".line1 .chart"));
-
-  option = {
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        lineStyle: {
-          color: "#dddc6b"
-        }
-      }
-    },
-    legend: {
-      top: "0%",
-      textStyle: {
-        color: "rgba(255,255,255,.5)",
-        fontSize: "12"
-      }
-    },
-    grid: {
-      left: "10",
-      top: "30",
-      right: "10",
-      bottom: "10",
-      containLabel: true
-    },
-
-    xAxis: [
-      {
-        type: "category",
-        boundaryGap: false,
-        axisLabel: {
-          textStyle: {
-            color: "rgba(255,255,255,.6)",
-            fontSize: 12
-          }
-        },
+        // 去除x坐标轴的颜色
         axisLine: {
-          lineStyle: {
-            color: "rgba(255,255,255,.2)"
-          }
+          show: false
         },
-
-        data: [
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "07",
-          "08",
-          "09",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-          "22",
-          "23",
-          "24",
-          "25",
-          "26",
-          "27",
-          "28",
-          "29",
-          "30"
-        ]
+        nameLocation:'middle',
+        nameTextStyle:{
+          color:"rgba(255,255,255,.6)",
+          fontSize: 7,
+        }
       },
-      {
-        axisPointer: { show: false },
-        axisLine: { show: false },
-        position: "bottom",
-        offset: 20
-      }
-    ],
-
-    yAxis: [
-      {
+      yAxis: {
         type: "value",
-        axisTick: { show: false },
-        axisLine: {
-          lineStyle: {
-            color: "rgba(255,255,255,.1)"
-          }
+        // 去除刻度
+        axisTick: {
+          show: false
         },
+        // 修饰刻度标签的颜色
         axisLabel: {
-          textStyle: {
-            color: "rgba(255,255,255,.6)",
-            fontSize: 12
-          }
+          color: "rgba(255,255,255,.7)"
         },
-
+        // 修改y轴分割线的颜色
         splitLine: {
           lineStyle: {
-            color: "rgba(255,255,255,.1)"
+            color: "#012f4a"
           }
         }
-      }
-    ],
-    series: [
-      {
-        name: "加购物车",
-        type: "line",
-        smooth: true,
-        symbol: "circle",
-        symbolSize: 5,
-        showSymbol: false,
-        lineStyle: {
-          normal: {
-            color: "#0184d5",
-            width: 2
-          }
-        },
-        areaStyle: {
-          normal: {
-            color: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: "rgba(1, 132, 213, 0.4)"
-                },
-                {
-                  offset: 0.8,
-                  color: "rgba(1, 132, 213, 0.1)"
-                }
-              ],
-              false
-            ),
-            shadowColor: "rgba(0, 0, 0, 0.1)"
-          }
-        },
-        itemStyle: {
-          normal: {
-            color: "#0184d5",
-            borderColor: "rgba(221, 220, 107, .1)",
-            borderWidth: 12
-          }
-        },
-        data: [
-          30,
-          40,
-          30,
-          40,
-          30,
-          40,
-          30,
-          60,
-          20,
-          40,
-          20,
-          40,
-          30,
-          40,
-          30,
-          40,
-          30,
-          40,
-          30,
-          60,
-          20,
-          40,
-          20,
-          40,
-          30,
-          60,
-          20,
-          40,
-          20,
-          40
-        ]
       },
-      {
-        name: "购买",
-        type: "line",
-        smooth: true,
-        symbol: "circle",
-        symbolSize: 5,
-        showSymbol: false,
-        lineStyle: {
-          normal: {
-            color: "#00d887",
-            width: 2
-          }
+      // Declare several bar series, each will be mapped
+      // to a column of dataset.source by default.
+      series: [
+        {
+          name: "单击",
+          type: "line",
+          stack: "总量",
+          // 是否让线条圆滑显示
+          smooth: true,
+          data: oneClicksTimes
         },
-        areaStyle: {
-          normal: {
-            color: new echarts.graphic.LinearGradient(
-              0,
-              0,
-              0,
-              1,
-              [
-                {
-                  offset: 0,
-                  color: "rgba(0, 216, 135, 0.4)"
-                },
-                {
-                  offset: 0.8,
-                  color: "rgba(0, 216, 135, 0.1)"
-                }
-              ],
-              false
-            ),
-            shadowColor: "rgba(0, 0, 0, 0.1)"
-          }
+        {
+          name: "加入购物车",
+          type: "line",
+          stack: "总量",
+          // 是否让线条圆滑显示
+          smooth: true,
+          data: shoppingCartsTimes
         },
-        itemStyle: {
-          normal: {
-            color: "#00d887",
-            borderColor: "rgba(221, 220, 107, .1)",
-            borderWidth: 12
-          }
+        {
+          name: "购买",
+          type: "line",
+          stack: "总量",
+          // 是否让线条圆滑显示
+          smooth: true,
+          data: purchaseTimes
         },
-        data: [
-          50,
-          30,
-          50,
-          60,
-          10,
-          50,
-          30,
-          50,
-          60,
-          40,
-          60,
-          40,
-          80,
-          30,
-          50,
-          60,
-          10,
-          50,
-          30,
-          70,
-          20,
-          50,
-          10,
-          40,
-          50,
-          30,
-          70,
-          20,
-          50,
-          10,
-          40
-        ]
-      }
-    ]
-  };
-
-  // 使用刚指定的配置项和数据显示图表。
-  myChart.setOption(option);
+        {
+          name: "收藏",
+          type: "line",
+          stack: "总量",
+          // 是否让线条圆滑显示
+          smooth: true,
+          data: favouriteTimes
+        },
+      ]
+    };
+    option && myChart.setOption(option);
+  })
   window.addEventListener("resize", function() {
     myChart.resize();
   });
 })();
 
-// 点位分布统计模块
+// 用户行为分布
 (function() {
-  // 1. 实例化对象
-  var myChart = echarts.init(document.querySelector(".pie1  .chart"));
-  // 2. 指定配置项和数据
-  var option = {
-    legend: {
-      top: "90%",
-      itemWidth: 10,
-      itemHeight: 10,
-      textStyle: {
-        color: "rgba(255,255,255,.5)",
-        fontSize: "12"
-      }
-    },
-    tooltip: {
-      trigger: "item",
-      formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    // 注意颜色写的位置
-    color: [
-      "#006cff",
-      "#60cda0",
-      "#ed8884",
-      "#ff9f7f",
-      "#0096ff",
-      "#9fe6b8",
-      "#32c5e9",
-      "#1d9dff"
-    ],
-    series: [
-      {
-        name: "点位统计",
-        type: "pie",
-        // 如果radius是百分比则必须加引号
-        radius: ["10%", "70%"],
-        center: ["50%", "42%"],
-        roseType: "radius",
-        data: [
-          { value: 20, name: "id1" },
-          { value: 26, name: "id2" },
-          { value: 24, name: "id3" },
-          { value: 25, name: "id4" },
-          { value: 20, name: "id5" },
-          { value: 25, name: "id6" }
-        ],
-        // 修饰饼形图文字相关的样式 label对象
-        label: {
-          fontSize: 10
+  // 基于准备好的dom，初始化echarts实例
+  var chartDom = document.getElementById('pie-action');
+  var myChart= echarts.init(chartDom);
+  $.getJSON("./queryUserAction",function(values){
+    var bufData = []
+    console.log(values.data)
+    for(var i=0;i<values.data.length;i++){
+      var jsonData ={}
+      jsonData.value = values.data[i].purchaseTimes
+      jsonData.name = "购买"
+      bufData.push(jsonData)
+      jsonData ={}
+      jsonData.value = values.data[i].favouriteTimes
+      jsonData.name = "收藏"
+      bufData.push(jsonData)
+      jsonData ={}
+      jsonData.value = values.data[i].oneClicksTimes
+      jsonData.name = "点击"
+      bufData.push(jsonData)
+      jsonData ={}
+      jsonData.value = values.data[i].shoppingCartsTimes
+      jsonData.name = "加入购物车"
+      bufData.push(jsonData)
+    }
+    option = {
+      color: ['#c23531','#2f4554', '#61a0a8'],
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b}: {c} ({d}%)",
+          position: function(p) {
+            //其中p为当前鼠标的位置
+            return [p[0] + 10, p[1] - 10];
+          }
         },
-        // 修饰引导线样式
-        labelLine: {
-          // 连接到图形的线长度
-          length: 10,
-          // 连接到文字的线长度
-          length2: 10
+      legend: {
+        top: "90%",
+        left: 'center',
+            textStyle: {
+              color: "rgba(255,255,255,.5)",
+              fontSize: "12"
+            },
+            itemWidth: 10,
+            itemHeight: 10,
+      },
+      series: [
+        {
+          name: '行为',
+          type: 'pie',
+          color: [
+              "#065aab",
+              "#00e0ff",
+              "#8cffdc",
+              "#6efd9a"
+          ],
+          radius: ['40%', '60%'],
+          avoidLabelOverlap: false,
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '40',
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: bufData
         }
-      }
-    ]
-  };
+      ]
+    };
+    option && myChart.setOption(option);
 
-  // 3. 配置项和数据给我们的实例化对象
-  myChart.setOption(option);
-  // 4. 当我们浏览器缩放的时候，图表也等比例缩放
+  })
   window.addEventListener("resize", function() {
-    // 让我们的图表调用 resize这个方法
+    myChart.resize();
+  });
+})();
+
+(function() {
+  // 基于准备好的dom，初始化echarts实例
+  var chartDom = document.getElementById('pie-gender');
+  var myChart = echarts.init(chartDom);
+  $.getJSON("./queryUserGender",function(values){
+    var bufData = []
+    for(var i=0;i<values.data.length;i++){
+      var jsonData ={}
+      jsonData.value = values.data[i]['num']
+      var gender = values.data[i]['gender']
+      if(gender === "1"){
+        jsonData.name = "男"
+      }else if(gender === "0"){
+        jsonData.name = "女"
+      }else{
+        jsonData.name = "未知"
+      }
+
+      bufData.push(jsonData)
+    }
+    option = {
+      color:['#f88888','#0059f6','#b6ffb3'],
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        textStyle:{
+          color:'#fff'
+        }
+      },
+      series: [
+        {
+          name: '人数',
+          type: 'pie',
+          radius: '50%',
+          data: bufData,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+
+    option && myChart.setOption(option);
+
+  })
+  window.addEventListener("resize", function() {
+    myChart.resize();
+  });
+})();
+
+//销量Top10商家交互操作
+(function() {
+  // 基于准备好的dom，初始化echarts实例
+  var chartDom = document.getElementById('bar-action');
+  var myChart = echarts.init(chartDom);
+  $.getJSON("./querySellerAction",function(values){
+    var merchantId = []
+    var totalLogs = []
+    var oneClicksTimes = []
+    var shoppingCartsTimes = []
+    var purchaseTimes = []
+    var favouriteTimes = []
+    for(var i=0;i<values.data.length;i++){
+      merchantId.push(values.data[i].merchantId)
+      totalLogs.push(values.data[i].totalLogs)
+      oneClicksTimes.push(values.data[i].oneClicksTimes)
+      shoppingCartsTimes.push(values.data[i].shoppingCartsTimes)
+      purchaseTimes.push(values.data[i].purchaseTimes)
+      favouriteTimes.push(values.data[i].favouriteTimes)
+    }
+    option = {
+      legend: {
+        textStyle: {
+          color: "rgba(255,255,255,.5)",
+          fontSize: "12"
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          // Use axis to trigger tooltip
+          type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '6%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'value' ,
+        name: '人次',
+        axisLabel: {
+          textStyle: {
+            color: "rgba(255,255,255,.6)",
+            fontSize: "8"
+          }
+        },
+        nameLocation:'middle',
+        nameTextStyle:{
+          color:"rgba(255,255,255,.6)",
+          fontSize: 10,
+        }
+      },
+      yAxis: {
+        name: '商家id',
+        type: 'category',
+        data: merchantId,
+        axisLabel: {
+          textStyle: {
+            color: "rgba(255,255,255,.6)",
+            fontSize: "8"
+          }
+        },
+        nameTextStyle:{
+          color:"rgba(255,255,255,.6)",
+          fontSize: 9,
+        }
+      },
+      // Declare several bar series, each will be mapped
+      // to a column of dataset.source by default.
+      series: [
+        {
+          name: '单击',
+          type: 'bar',
+          stack: 'total',
+          // label: {
+          //   show: true
+          // },
+          emphasis: {
+            focus: 'series'
+          },
+          data: oneClicksTimes
+        },
+        {
+          name: '加入购物车',
+          type: 'bar',
+          stack: 'total',
+          // label: {
+          //   show: true
+          // },
+          emphasis: {
+            focus: 'series'
+          },
+          data: shoppingCartsTimes
+        },
+        {
+          name: '购买',
+          type: 'bar',
+          stack: 'total',
+          // label: {
+          //   show: true
+          // },
+          emphasis: {
+            focus: 'series'
+          },
+          data: purchaseTimes
+        },
+        {
+          name: '收藏',
+          type: 'bar',
+          stack: 'total',
+          // label: {
+          //   show: true
+          // },
+          emphasis: {
+            focus: 'series'
+          },
+          data: favouriteTimes
+        }
+      ]
+    };
+    option && myChart.setOption(option);
+  })
+  window.addEventListener("resize", function() {
+    myChart.resize();
+  });
+})();
+
+// 销量Top10商家复购情况
+(function() {
+  // 基于准备好的dom，初始化echarts实例
+  var chartDom = document.getElementById('bar-sellerLabel');
+  var myChart = echarts.init(chartDom);
+  $.getJSON("./querySellerTop10Label",function(values){
+    var label0 = []
+    var label1 = []
+    var merchantId = []
+    for(var i=0;i<values.data.length;i++){
+      merchantId.push(values.data[i]["merchantId"])
+      label0.push(values.data[i]["label0"])
+      label1.push(values.data[i]["label1"])
+    }
+    option = {
+      color: ["#2f89cf","#ff7c7c"],
+      legend: {
+        textStyle: {
+          color: "rgba(255,255,255,.5)",
+          fontSize: "12"
+        }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          // Use axis to trigger tooltip
+          type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+        },
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '6%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category' ,
+        name: '商家id',
+        data: merchantId,
+        axisLabel: {
+          textStyle: {
+            color: "rgba(255,255,255,.6)",
+            fontSize: "8"
+          }
+        },
+        nameLocation:'middle',
+        nameTextStyle:{
+          color:"rgba(255,255,255,.6)",
+          fontSize: 10,
+        }
+      },
+      yAxis: {
+        name: '人次',
+        type: 'value',
+        axisLabel: {
+          textStyle: {
+            color: "rgba(255,255,255,.6)",
+            fontSize: "8"
+          }
+        },
+        nameTextStyle:{
+          color:"rgba(255,255,255,.6)",
+          fontSize: 10,
+        }
+      },
+      // Declare several bar series, each will be mapped
+      // to a column of dataset.source by default.
+      series: [
+        {
+          name: '未复购',
+          type: 'bar',
+          emphasis: {
+            focus: 'series'
+          },
+          data: label0
+        },
+        {
+          name: '复购',
+          type: 'bar',
+          // label: {
+          //   show: true
+          // },
+          emphasis: {
+            focus: 'series'
+          },
+          data: label1
+        }
+      ]
+    };
+    option && myChart.setOption(option);
+  })
+  window.addEventListener("resize", function() {
     myChart.resize();
   });
 })();

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户行为分布</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+<h1>用户行为分布</h1>
+<div id="pie-action" class="chart" style="width: 1280px;height: 720px"></div>
+<script type="text/javascript">
+    var chartDom = document.getElementById('pie-action');
+    var myChart = echarts.init(chartDom);
+    $.getJSON("./queryUserAction",function(values){
+        var bufData = []
+        console.log(values.data)
+        for(var i=0;i<values.data.length;i++){
+            var jsonData ={}
+            jsonData.value = values.data[i].purchaseTimes
+            jsonData.name = "购买"
+            bufData.push(jsonData)
+            jsonData ={}
+            jsonData.value = values.data[i].favouriteTimes
+            jsonData.name = "收藏"
+            bufData.push(jsonData)
+            jsonData ={}
+            jsonData.value = values.data[i].oneClicksTimes
+            jsonData.name = "点击"
+            bufData.push(jsonData)
+            jsonData ={}
+            jsonData.value = values.data[i].shoppingCartsTimes
+            jsonData.name = "加入购物车"
+            bufData.push(jsonData)
+        }
+        option = {
+            //color: ['#c23531','#2f4554', '#61a0a8'],
+            tooltip: {
+                trigger: "item",
+                formatter: "{a} <br/>{b}: {c} ({d}%)",
+                position: function(p) {
+                    //其中p为当前鼠标的位置
+                    return [p[0] + 10, p[1] - 10];
+                }
+            },
+            legend: {
+                top: "0%",
+                left: 'center',
+                textStyle: {
+                    color: "rgba(26,26,26,0.5)",
+                    fontSize: "16"
+                },
+                itemWidth: 10,
+                itemHeight: 10,
+            },
+            series: [
+                {
+                    name: '行为',
+                    type: 'pie',
+                    color: [
+                        "#065aab",
+                        "#00e0ff",
+                        "#00be1a",
+                        "#b48b00"
+                    ],
+                    radius: ['40%', '60%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '40',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: bufData
+                }
+            ]
+        };
+        option && myChart.setOption(option);
+
+    })
+    window.addEventListener("resize", function() {
+        myChart.resize();
+    });
+</script>
+</body>
+</html>

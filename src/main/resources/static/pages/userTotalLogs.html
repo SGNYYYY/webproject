@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>交互次数对应的用户数量</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+<h1>交互次数对应的用户数量</h1>
+<div id="bar-userTotalLogs" style="width: 1280px;height: 720px"></div>
+<script type="text/javascript">
+    var chartDomUTL = document.getElementById('bar-userTotalLogs');
+    var myChartUTL = echarts.init(chartDomUTL);
+    $.getJSON("./queryUserTotalLogs",function(values){
+        var xAxis = []
+        var yAxis = []
+        for(var i=0;i<values.data.length;i++){
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+        }
+        option = {
+            tooltip:{
+                formatter: '交互 {b} 次 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+                type: 'category',
+                data: xAxis,
+                name: 'total_logs'
+            },
+            yAxis: {
+                type: 'value',
+                name: '用户数量'
+            },
+            series: [
+                {
+                    data: yAxis,
+                    type: 'bar'
+                }
+            ]
+        };
+        option && myChartUTL.setOption(option);
+    })
+</script>
+</body>
+</html>

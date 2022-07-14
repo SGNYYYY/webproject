@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户浏览天数统计</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+<h1>用户浏览天数统计</h1>
+<div id="bar-userBrowseDays" style="width: 1280px;height: 720px"></div>
+<script type="text/javascript">
+    var chartDomUBD = document.getElementById('bar-userBrowseDays');
+    var myChartUBD= echarts.init(chartDomUBD);
+    $.getJSON("./queryUserBrowseDays",function(values){
+        var xAxis = []
+        var yAxis = []
+        for(var i=0;i<values.data.length;i++){
+            if(values.data[i]['total'] === 0)
+                continue
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+        }
+        option = {
+            tooltip:{
+                formatter: '浏览 {b} 天 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+                type: 'category',
+                data: xAxis,
+                name: '浏览天数'
+            },
+            yAxis: {
+                type: 'value',
+                name: '用户数量'
+            },
+            series: [
+                {
+                    data: yAxis,
+                    type: 'line'
+                }
+            ]
+        };
+        option && myChartUBD.setOption(option);
+    })
+</script>
+</body>
+</html>

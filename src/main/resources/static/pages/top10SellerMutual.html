@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>销量Top10商家交互操作</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+<h1>销量Top10商家交互操作</h1>
+<div id="bar-action" class="chart" style="width: 1280px;height: 720px"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var chartDom = document.getElementById('bar-action');
+    var myChart = echarts.init(chartDom);
+    $.getJSON("./querySellerAction",function(values){
+        var merchantId = []
+        var totalLogs = []
+        var oneClicksTimes = []
+        var shoppingCartsTimes = []
+        var purchaseTimes = []
+        var favouriteTimes = []
+        for(var i=0;i<values.data.length;i++){
+            merchantId.push(values.data[i].merchantId)
+            totalLogs.push(values.data[i].totalLogs)
+            oneClicksTimes.push(values.data[i].oneClicksTimes)
+            shoppingCartsTimes.push(values.data[i].shoppingCartsTimes)
+            purchaseTimes.push(values.data[i].purchaseTimes)
+            favouriteTimes.push(values.data[i].favouriteTimes)
+        }
+        option = {
+            legend: {
+                textStyle: {
+                    color: "rgba(19,19,19,0.5)",
+                    fontSize: "15"
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    // Use axis to trigger tooltip
+                    type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '6%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'value' ,
+                name: '人次',
+                axisLabel: {
+                    textStyle: {
+                        color: "rgba(19,19,19,0.6)",
+                        fontSize: "15"
+                    }
+                },
+                nameLocation:'middle',
+                nameTextStyle:{
+                    color:"rgba(23,23,23,0.6)",
+                    fontSize: 15,
+                }
+            },
+            yAxis: {
+                name: '商家id',
+                type: 'category',
+                data: merchantId,
+                axisLabel: {
+                    textStyle: {
+                        color: "rgba(28,28,28,0.6)",
+                        fontSize: "15"
+                    }
+                },
+                nameTextStyle:{
+                    color:"rgba(28,28,28,0.6)",
+                    fontSize: 15,
+                }
+            },
+            // Declare several bar series, each will be mapped
+            // to a column of dataset.source by default.
+            series: [
+                {
+                    name: '单击',
+                    type: 'bar',
+                    stack: 'total',
+                    // label: {
+                    //   show: true
+                    // },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: oneClicksTimes
+                },
+                {
+                    name: '加入购物车',
+                    type: 'bar',
+                    stack: 'total',
+                    // label: {
+                    //   show: true
+                    // },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: shoppingCartsTimes
+                },
+                {
+                    name: '购买',
+                    type: 'bar',
+                    stack: 'total',
+                    // label: {
+                    //   show: true
+                    // },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: purchaseTimes
+                },
+                {
+                    name: '收藏',
+                    type: 'bar',
+                    stack: 'total',
+                    // label: {
+                    //   show: true
+                    // },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: favouriteTimes
+                }
+            ]
+        };
+        option && myChart.setOption(option);
+    })
+    window.addEventListener("resize", function() {
+        myChart.resize();
+    });
+</script>
+</body>
+</html>

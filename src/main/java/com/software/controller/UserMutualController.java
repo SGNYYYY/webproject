@@ -64,4 +64,120 @@ public class UserMutualController {
         return httpResponseEntity;
     }
 
+    @RequestMapping(value = "/querySellerAction")
+    public HttpResponseEntity querySellerAction() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<UserMutualEntity> result = userMutualService.querySellerAction();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserActionTop5")
+    public HttpResponseEntity queryUserActionTop5() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<UserMutualEntity> result = userMutualService.queryUserActionTop5();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserTotalLogs")
+    public HttpResponseEntity queryUserTotalLogs() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryUserTotalLogs();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserOneClicks")
+    public HttpResponseEntity queryUserOneClicks() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryUserOneClicks();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserShoppingCarts")
+    public HttpResponseEntity queryUserShoppingCarts() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryUserShoppingCarts();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserPurchaseTimes")
+    public HttpResponseEntity queryUserPurchaseTimes() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryUserPurchaseTimes();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserFavouriteTimes")
+    public HttpResponseEntity queryUserFavouriteTimes() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryUserFavouriteTimes();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserBrowseDays")
+    public HttpResponseEntity queryUserBrowseDays() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryUserBrowseDays();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/querySellerTop10Label")
+    public HttpResponseEntity querySellerTop10Label() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.querySellerTop10Label();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryNum")
+    public HttpResponseEntity queryNum() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryNum();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryGenderLabel")
+    public HttpResponseEntity queryGenderLabel() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryGenderLabel();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryAgeLabel")
+    public HttpResponseEntity queryAgeLabel() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryAgeLabel();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
+
+    @RequestMapping(value = "/queryUserTop10Label")
+    public HttpResponseEntity queryUserTop10Label() {
+        HttpResponseEntity httpResponseEntity = new HttpResponseEntity();
+        List<Map<String, Object>> result = userMutualService.queryUserTop10Label();
+        httpResponseEntity.setCode(Constans.SUCCESS_CODE);
+        httpResponseEntity.setData(result);
+        return httpResponseEntity;
+    }
 }

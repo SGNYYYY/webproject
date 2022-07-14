@@ -7,7 +7,7 @@
     <script type="text/javascript" src="./js/echarts.min.js"></script>
 </head>
 <body>
-   <h1>性别分布饼状图</h1>
+   <h1>用户性别分布</h1>
    <div id="pie-gender" style="width: 600px;height: 500px"></div>
    <script type="text/javascript">
        var chartDomGender = document.getElementById('pie-gender');
@@ -61,7 +61,7 @@
 
        })
    </script>
-   <h1>行为分布饼状图</h1>
+   <h1>用户行为分布</h1>
    <div id="pie-action" style="width: 600px;height: 500px"></div>
    <script type="text/javascript">
        var chartDomAction = document.getElementById('pie-action');
@@ -128,7 +128,7 @@
            option && myChartAction.setOption(option);
        })
    </script>
-   <h1>年龄占比</h1>
+   <h1>用户年龄占比</h1>
    <div id="bar-age" style="width: 600px;height: 500px"></div>
    <script type="text/javascript">
        var chartDomAge = document.getElementById('bar-age');
@@ -190,7 +190,8 @@
 
                xAxis: {
                    type: 'category',
-                   data: xAxis
+                   data: xAxis,
+                   name: '年龄段'
                },
                yAxis: {
                    type: 'value',
@@ -199,7 +200,8 @@
                        interval: 'auto',
                        formatter: '{value} %'
                    },
-                   show: true
+                   show: true,
+                   name: '占比'
                },
                series: [
                    {
@@ -229,6 +231,442 @@
            option && myChartAge.setOption(option);
        })
    </script>
-
+   <h1>用户浏览天数统计</h1>
+   <div id="bar-userBrowseDays" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+      var chartDomUBD = document.getElementById('bar-userBrowseDays');
+      var myChartUBD= echarts.init(chartDomUBD);
+      $.getJSON("./queryUserBrowseDays",function(values){
+         var xAxis = []
+         var yAxis = []
+         for(var i=0;i<values.data.length;i++){
+            if(values.data[i]['total'] === 0)
+               continue
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+         }
+         option = {
+            tooltip:{
+               formatter: '浏览 {b} 天 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+               type: 'category',
+               data: xAxis,
+               name: '浏览天数'
+            },
+            yAxis: {
+               type: 'value',
+               name: '用户数量'
+            },
+            series: [
+               {
+                  data: yAxis,
+                  type: 'line'
+               }
+            ]
+         };
+         option && myChartUBD.setOption(option);
+      })
+   </script>
+   <h1>交互次数对应的用户数量</h1>
+   <div id="bar-userTotalLogs" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+      var chartDomUTL = document.getElementById('bar-userTotalLogs');
+      var myChartUTL = echarts.init(chartDomUTL);
+      $.getJSON("./queryUserTotalLogs",function(values){
+         var xAxis = []
+         var yAxis = []
+         for(var i=0;i<values.data.length;i++){
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+         }
+         option = {
+            tooltip:{
+               formatter: '交互 {b} 次 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+               type: 'category',
+               data: xAxis,
+               name: 'total_logs'
+            },
+            yAxis: {
+               type: 'value',
+               name: '用户数量'
+            },
+            series: [
+               {
+                  data: yAxis,
+                  type: 'bar'
+               }
+            ]
+         };
+         option && myChartUTL.setOption(option);
+      })
+   </script>
+   <h1>用户单击次数统计</h1>
+   <div id="bar-userOneClicks" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+      var chartDomUOC = document.getElementById('bar-userOneClicks');
+      var myChartUOC = echarts.init(chartDomUOC);
+      $.getJSON("./queryUserOneClicks",function(values){
+         var xAxis = []
+         var yAxis = []
+         for(var i=0;i<values.data.length;i++){
+            if(values.data[i]['total'] === 0)
+               continue
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+         }
+         option = {
+            tooltip:{
+               formatter: '单击 {b} 次 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+               type: 'category',
+               data: xAxis,
+               name: '单击次数'
+            },
+            yAxis: {
+               type: 'value',
+               name: '用户数量'
+            },
+            series: [
+               {
+                  data: yAxis,
+                  type: 'bar'
+               }
+            ]
+         };
+         option && myChartUOC.setOption(option);
+      })
+   </script>
+   <h1>用户加购次数统计</h1>
+   <div id="bar-userShoppingCarts" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+      var chartDomUSC = document.getElementById('bar-userShoppingCarts');
+      var myChartUSC = echarts.init(chartDomUSC);
+      $.getJSON("./queryUserShoppingCarts",function(values){
+         var xAxis = []
+         var yAxis = []
+         for(var i=0;i<values.data.length;i++){
+            if(values.data[i]['total'] === 0)
+               continue
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+         }
+         option = {
+            tooltip:{
+               formatter: '加购 {b} 次 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+               type: 'category',
+               data: xAxis,
+               name: '加购次数'
+            },
+            yAxis: {
+               type: 'value',
+               name: '用户数量'
+            },
+            series: [
+               {
+                  data: yAxis,
+                  type: 'bar'
+               }
+            ]
+         };
+         option && myChartUSC.setOption(option);
+      })
+   </script>
+   <h1>用户购买次数统计</h1>
+   <div id="bar-userPurchaseTimes" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+      var chartDomUPT = document.getElementById('bar-userPurchaseTimes');
+      var myChartUPT = echarts.init(chartDomUPT);
+      $.getJSON("./queryUserPurchaseTimes",function(values){
+         var xAxis = []
+         var yAxis = []
+         for(var i=0;i<values.data.length;i++){
+            if(values.data[i]['total'] === 0)
+               continue
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+         }
+         option = {
+            tooltip:{
+               formatter: '购买 {b} 次 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+               type: 'category',
+               data: xAxis,
+               name: '购买次数'
+            },
+            yAxis: {
+               type: 'value',
+               name: '用户数量'
+            },
+            series: [
+               {
+                  data: yAxis,
+                  type: 'bar'
+               }
+            ]
+         };
+         option && myChartUPT.setOption(option);
+      })
+   </script>
+   <h1>用户收藏次数统计</h1>
+   <div id="bar-userFavouriteTimes" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+      var chartDomUFT = document.getElementById('bar-userFavouriteTimes');
+      var myChartUFT = echarts.init(chartDomUFT);
+      $.getJSON("./queryUserFavouriteTimes",function(values){
+         var xAxis = []
+         var yAxis = []
+         for(var i=0;i<values.data.length;i++){
+            if(values.data[i]['total'] === 0)
+               continue
+            xAxis.push(values.data[i]['total'])
+            yAxis.push(values.data[i]['peoplenum'])
+         }
+         option = {
+            tooltip:{
+               formatter: '收藏 {b} 次 : {c} 人'
+            },
+            legend:{},
+            xAxis: {
+               type: 'category',
+               data: xAxis,
+               name: '收藏次数'
+            },
+            yAxis: {
+               type: 'value',
+               name: '用户数量'
+            },
+            series: [
+               {
+                  data: yAxis,
+                  type: 'bar'
+               }
+            ]
+         };
+         option && myChartUFT.setOption(option);
+      })
+   </script>
+   <h1>购买数Top5用户行为</h1>
+   <div id="bar-userAction" style="width: 600px;height: 500px"></div>
+   <h1>购买数Top5用户购买行为</h1>
+   <div id="bar-userPurchase" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+      var chartDomUAction = document.getElementById('bar-userAction');
+      var myChartUAction = echarts.init(chartDomUAction);
+       var chartDomUP = document.getElementById('bar-userPurchase');
+       var myChartUP = echarts.init(chartDomUP);
+       $.getJSON("./queryUserActionTop5",function(values){
+           var user = []
+          var userId = []
+          var P_C = []
+          var P_S = []
+          var P_F = []
+           for(var i=0;i<values.data.length;i++){
+               var useri = [];
+               useri.push(values.data[i].userId)
+               useri.push(values.data[i].totalLogs)
+               useri.push(values.data[i].oneClicksTimes)
+               useri.push(values.data[i].shoppingCartsTimes)
+               useri.push(values.data[i].purchaseTimes)
+               useri.push(values.data[i].favouriteTimes)
+              userId.push(values.data[i].userId)
+              if(values.data[i].oneClicksTimes!==0)
+                  P_C.push(values.data[i].purchaseTimes/values.data[i].oneClicksTimes)
+              else P_C.push(0)
+              if(values.data[i].shoppingCartsTimes!==0)
+                  P_S.push(values.data[i].purchaseTimes/values.data[i].shoppingCartsTimes)
+              else P_S.push(0)
+              if(values.data[i].favouriteTimes!==0)
+                  P_F.push(values.data[i].purchaseTimes/values.data[i].favouriteTimes)
+              else P_F.push(0)
+               user.push(useri)
+           }
+           option1 = {
+               legend: {},
+               tooltip: {},
+               dataset: {
+                   source: [
+                       ['user_id', '总计', '单击', '加入购物车', '购买', '收藏'],
+                       user[0],
+                       user[1],
+                       user[2],
+                       user[3],
+                       user[4]
+                   ]
+               },
+               xAxis: {
+                   type: 'category' ,
+                   name: '用户id'
+               },
+               yAxis: { },
+               // Declare several bar series, each will be mapped
+               // to a column of dataset.source by default.
+               series: [
+                   { type: 'bar' },
+                   { type: 'bar' },
+                   { type: 'bar' },
+                   { type: 'bar' },
+                   { type: 'bar' },]
+           };
+           option1 && myChartUAction.setOption(option1);
+          option2 = {
+             legend: {},
+             tooltip: {},
+             xAxis: {
+                type: 'category' ,
+                name: '用户id',
+                data: userId
+             },
+             yAxis: { },
+             // Declare several bar series, each will be mapped
+             // to a column of dataset.source by default.
+             series: [
+                {
+                   name: '购买单击比',
+                   type: 'bar',
+                   label: {
+                      show: true
+                   },
+                   emphasis: {
+                      focus: 'series'
+                   },
+                   data: P_C
+                },
+                {
+                   name: '购买加购比',
+                   type: 'bar',
+                   label: {
+                      show: true
+                   },
+                   emphasis: {
+                      focus: 'series'
+                   },
+                   data: P_S
+                },
+                {
+                   name: '购买收藏比',
+                   type: 'bar',
+                   label: {
+                      show: true
+                   },
+                   emphasis: {
+                      focus: 'series'
+                   },
+                   data: P_F
+                },]
+          };
+          option2 && myChartUP.setOption(option2);
+       })
+   </script>
+   <h1>销量Top5商家交互操作柱状图</h1>
+   <div id="bar-action" style="width: 600px;height: 500px"></div>
+   <script type="text/javascript">
+       var chartDomSAction = document.getElementById('bar-action');
+       var myChartSAction = echarts.init(chartDomSAction);
+       $.getJSON("./querySellerAction",function(values){
+          var merchantId = []
+          var totalLogs = []
+          var oneClicksTimes = []
+          var shoppingCartsTimes = []
+          var purchaseTimes = []
+          var favouriteTimes = []
+          for(var i=0;i<values.data.length;i++){
+               merchantId.push(values.data[i].merchantId)
+               totalLogs.push(values.data[i].totalLogs)
+               oneClicksTimes.push(values.data[i].oneClicksTimes)
+               shoppingCartsTimes.push(values.data[i].shoppingCartsTimes)
+               purchaseTimes.push(values.data[i].purchaseTimes)
+               favouriteTimes.push(values.data[i].favouriteTimes)
+           }
+           option = {
+               legend: {},
+              tooltip: {
+                 trigger: 'axis',
+                 axisPointer: {
+                    // Use axis to trigger tooltip
+                    type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                 }
+              },
+              grid: {
+                 left: '3%',
+                 right: '4%',
+                 bottom: '3%',
+                 containLabel: true
+              },
+               xAxis: {
+                   type: 'value' ,
+                   name: '次数'
+               },
+               yAxis: {
+                  type: 'category',
+                  data: merchantId
+               },
+               // Declare several bar series, each will be mapped
+               // to a column of dataset.source by default.
+              series: [
+                 {
+                    name: '单击',
+                    type: 'bar',
+                    stack: 'total',
+                    label: {
+                       show: true
+                    },
+                    emphasis: {
+                       focus: 'series'
+                    },
+                    data: oneClicksTimes
+                 },
+                 {
+                    name: '加入购物车',
+                    type: 'bar',
+                    stack: 'total',
+                    label: {
+                       show: true
+                    },
+                    emphasis: {
+                       focus: 'series'
+                    },
+                    data: shoppingCartsTimes
+                 },
+                 {
+                    name: '购买',
+                    type: 'bar',
+                    stack: 'total',
+                    label: {
+                       show: true
+                    },
+                    emphasis: {
+                       focus: 'series'
+                    },
+                    data: purchaseTimes
+                 },
+                 {
+                    name: '收藏',
+                    type: 'bar',
+                    stack: 'total',
+                    label: {
+                       show: true
+                    },
+                    emphasis: {
+                       focus: 'series'
+                    },
+                    data: favouriteTimes
+                 }
+              ]
+           };
+           option && myChartSAction.setOption(option);
+       })
+   </script>
 </body>
 </html>

@@ -21,6 +21,129 @@
     group by age_range
   </select>
 
+  <!-- 查询销量top5商家-->
+  <select id="querySellerAction" resultType="com.software.beans.UserMutualEntity">
+    select merchant_id, sum(total_logs) as total_logs, sum(one_clicks) as one_clicks_times, sum(shopping_carts) as shopping_carts_times, sum(purchase_times) as purchase_times, sum(favourite_times) as favourite_times
+    from skycat
+    group by merchant_id
+    order by sum(purchase_times) desc
+      LIMIT 10
+  </select>
 
+  <!-- 查询购买数top10用户-->
+  <select id="queryUserActionTop5" resultType="com.software.beans.UserMutualEntity">
+    select user_id, sum(total_logs) as total_logs, sum(one_clicks) as one_clicks_times, sum(shopping_carts) as shopping_carts_times, sum(purchase_times) as purchase_times, sum(favourite_times) as favourite_times
+    from skycat
+    group by user_id
+    order by sum(purchase_times) desc
+      LIMIT 10
+  </select>
 
+  <!-- 查询交互数1-80对应的用户数量-->
+  <select id="queryUserTotalLogs" resultType="map">
+    select count(*) as peoplenum, total
+    from (select user_id, sum(total_logs) as total
+          from skycat
+          GROUP BY user_id
+          ORDER BY sum(total_logs) desc) tb
+    GROUP BY tb.total
+      limit 80
+  </select>
+
+  <!--用户单机次数查询-->
+  <select id="queryUserOneClicks" resultType="map" >
+    select count(*) as peoplenum, total
+    from (select user_id, sum(one_clicks) as total
+          from skycat
+          GROUP BY user_id
+          ORDER BY sum(one_clicks) desc) tb
+    GROUP BY tb.total
+      limit 81
+  </select>
+
+  <!--用户加购次数查询-->
+  <select id="queryUserShoppingCarts" resultType="map">
+    select count(*) as peoplenum, total
+    from (select user_id, sum(shopping_carts) as total
+          from skycat
+          GROUP BY user_id
+          ORDER BY sum(shopping_carts) desc) tb
+    GROUP BY tb.total
+  </select>
+
+  <!--用户加购次数查询-->
+  <select id="queryUserPurchaseTimes" resultType="map">
+    select count(*) as peoplenum, total
+    from (select user_id, sum(purchase_times) as total
+          from skycat
+          GROUP BY user_id
+          ORDER BY sum(purchase_times) desc) tb
+    GROUP BY tb.total
+  </select>
+
+  <!--用户加购次数查询-->
+  <select id="queryUserFavouriteTimes" resultType="map">
+    select count(*) as peoplenum, total
+    from (select user_id, sum(favourite_times) as total
+          from skycat
+          GROUP BY user_id
+          ORDER BY sum(favourite_times) desc) tb
+    GROUP BY tb.total
+  </select>
+
+    <!--用户浏览天数查询-->
+    <select id="queryUserBrowseDays" resultType="map">
+        select count(*) as peoplenum, total
+        from (select user_id, sum(browse_days) as total
+              from skycat
+              GROUP BY user_id
+              ORDER BY sum(browse_days) desc) tb
+        GROUP BY tb.total
+    </select>
+
+    <select id="querySellerTop10Label" resultType="map">
+        select tb1.merchant_id as merchantId, count(if(tb1.label =1,1,not null)) as label1 ,count(if(tb1.label =0,1,null)) as label0
+        from skycat tb1,
+             (select merchant_id,sum(purchase_times) as pt
+              from skycat
+              group by merchant_id
+              order by sum(purchase_times) desc
+                  LIMIT 10) tb2
+        where tb1.merchant_id = tb2.merchant_id
+        GROUP BY tb1.merchant_id
+        order by tb2.pt desc
+    </select>
+
+    <!--查询复购人数-->
+    <select id="queryNum" resultType="map">
+        select label, count(*) as num
+        from skycat
+        GROUP BY label
+    </select>
+
+    <!--查询性别与复购情况-->
+    <select id="queryGenderLabel" resultType="map">
+        select gender, count(if(label =1,1,not null)) as label1 ,count(if(label =0,1,null)) as label0
+        from skycat
+        GROUP BY gender
+    </select>
+    <!--查询年龄与复购情况-->
+    <select id="queryAgeLabel" resultType="map">
+        select age_range, count(if(label =1,1,not null)) as label1 ,count(if(label =0,1,null)) as label0
+        from skycat
+        GROUP BY age_range
+    </select>
+
+    <select id="queryUserTop10Label" resultType="map">
+        select tb1.user_id as userId, count(if(tb1.label =1,1,not null)) as label1 ,count(if(tb1.label =0,1,null)) as label0
+        from skycat tb1,
+             (select user_id,sum(purchase_times) as pt
+              from skycat
+              group by user_id
+              order by sum(purchase_times) desc
+                  LIMIT 10) tb2
+        where tb1.user_id = tb2.user_id
+        GROUP BY tb1.user_id
+        order by tb2.pt desc
+    </select>
 </mapper>

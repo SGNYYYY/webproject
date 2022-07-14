@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购买数Top10用户行为</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+<h1>购买数Top10用户行为</h1>
+<div id="line-userAction" class="chart" style="width: 1280px;height: 720px"></div>
+<script type="text/javascript">
+    var chartDom = document.getElementById("line-userAction");
+    var myChart = echarts.init(chartDom);
+    $.getJSON("./queryUserActionTop5",function(values){
+        var totalLogs = []
+        var oneClicksTimes = []
+        var shoppingCartsTimes = []
+        var purchaseTimes = []
+        var favouriteTimes = []
+        var userId = []
+        for(var i=0;i<values.data.length;i++){
+            var useri = [];
+            totalLogs.push(values.data[i].totalLogs)
+            oneClicksTimes.push(values.data[i].oneClicksTimes)
+            shoppingCartsTimes.push(values.data[i].shoppingCartsTimes)
+            purchaseTimes.push(values.data[i].purchaseTimes)
+            favouriteTimes.push(values.data[i].favouriteTimes)
+            userId.push(values.data[i].userId)
+        }
+        option = {
+            color: ["#00f2f1", "#ed3f35", "#00ff6d", "#ff9ede"],
+            legend: {
+                // 距离容器10%
+                right: "10%",
+                // 修饰图例文字的颜色
+                textStyle: {
+                    color: "#4c9bfd"
+                }
+            },
+            tooltip: {
+                trigger: "axis"
+            },
+            grid: {
+                top: "20%",
+                left: "3%",
+                right: "4%",
+                bottom: "3%",
+                show: true,
+                borderColor: "#012f4a",
+                containLabel: true
+            },
+            xAxis: {
+
+                type: 'category' ,
+                name: '用户id',
+                data: userId,
+                boundaryGap: false,
+                // 去除刻度
+                axisTick: {
+                    show: false
+                },
+                // 修饰刻度标签的颜色
+                axisLabel: {
+                    color: "rgba(28,28,28,0.7)",
+                    textStyle: {
+                        fontSize: "15"
+                    }
+                },
+                // 去除x坐标轴的颜色
+                axisLine: {
+                    show: false
+                },
+                nameLocation:'middle',
+                nameTextStyle:{
+                    color:"rgba(12,12,12,0.6)",
+                    fontSize: 15,
+                }
+            },
+            yAxis: {
+                type: "value",
+                // 去除刻度
+                axisTick: {
+                    show: false
+                },
+                // 修饰刻度标签的颜色
+                axisLabel: {
+                    color: "rgba(23,23,23,0.7)"
+                },
+                // 修改y轴分割线的颜色
+                splitLine: {
+                    lineStyle: {
+                        color: "#012f4a"
+                    }
+                }
+            },
+            // Declare several bar series, each will be mapped
+            // to a column of dataset.source by default.
+            series: [
+                {
+                    name: "单击",
+                    type: "line",
+                    stack: "总量",
+                    // 是否让线条圆滑显示
+                    smooth: true,
+                    data: oneClicksTimes
+                },
+                {
+                    name: "加入购物车",
+                    type: "line",
+                    stack: "总量",
+                    // 是否让线条圆滑显示
+                    smooth: true,
+                    data: shoppingCartsTimes
+                },
+                {
+                    name: "购买",
+                    type: "line",
+                    stack: "总量",
+                    // 是否让线条圆滑显示
+                    smooth: true,
+                    data: purchaseTimes
+                },
+                {
+                    name: "收藏",
+                    type: "line",
+                    stack: "总量",
+                    // 是否让线条圆滑显示
+                    smooth: true,
+                    data: favouriteTimes
+                },
+            ]
+        };
+        option && myChart.setOption(option);
+    })
+    window.addEventListener("resize", function() {
+        myChart.resize();
+    });
+</script>
+</body>
+</html>

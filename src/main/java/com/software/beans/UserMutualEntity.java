@@ -5,6 +5,10 @@ package com.software.beans;
  */
 public class UserMutualEntity {
 
+    private String merchant_id;
+
+    private String user_id;
+
     private String gender;
 
     private String age_range;
@@ -16,6 +20,12 @@ public class UserMutualEntity {
     private String purchase_times;
 
     private String favourite_times;
+
+    private String total_logs;
+
+    public String getUserId() { return user_id;}
+
+    public String getMerchantId() { return merchant_id;}
 
     public String getUserGender() {
         return gender;
@@ -30,6 +40,12 @@ public class UserMutualEntity {
     public String getFavouriteTimes() { return favourite_times;}
 
     public String getAgeRange() { return age_range;}
+
+    public String getTotalLogs() { return total_logs;}
+
+    public void setUserId(String user_id) {this.user_id = user_id;}
+
+    public void setMerchantId(String merchant_id) { this.merchant_id = merchant_id;}
 
     public void setUserNum(String userNum) {
         this.gender = gender;
@@ -46,4 +62,6 @@ public class UserMutualEntity {
     public void setFavouriteTimes(String favourite_times) { this.favourite_times = favourite_times;}
 
     public void setAgeRange(String age_range) { this.age_range = age_range;}
+
+    public void setTotalLogs(String total_logs) {this.total_logs = total_logs;}
 }

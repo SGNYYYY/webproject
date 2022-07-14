@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购买数Top10用户复购情况</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+<h1>购买数Top10用户复购情况</h1>
+<div id="bar-sellerLabel" class="chart" style="width: 1280px;height: 720px"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var chartDom = document.getElementById('bar-sellerLabel');
+    var myChart = echarts.init(chartDom);
+    $.getJSON("./queryUserTop10Label",function(values){
+        var label0 = []
+        var label1 = []
+        var userId = []
+        for(var i=0;i<values.data.length;i++){
+            userId.push(values.data[i]["userId"])
+            label0.push(values.data[i]["label0"])
+            label1.push(values.data[i]["label1"])
+        }
+        option = {
+            color: ["#2f89cf","#ff7c7c"],
+            legend: {
+                textStyle: {
+                    color: "rgba(0,0,0,0.5)",
+                    fontSize: "12"
+                }
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    // Use axis to trigger tooltip
+                    type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                },
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '6%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category' ,
+                name: '用户id',
+                data: userId,
+                axisLabel: {
+                    textStyle: {
+                        color: "rgba(9,9,9,0.6)",
+                        fontSize: "15"
+                    }
+                },
+                nameLocation:'middle',
+                nameTextStyle:{
+                    color:"rgba(0,0,0,0.6)",
+                    fontSize: 15,
+                }
+            },
+            yAxis: {
+                name: '次',
+                type: 'value',
+                axisLabel: {
+                    textStyle: {
+                        color: "rgba(0,0,0,0.6)",
+                        fontSize: "15"
+                    }
+                },
+                nameTextStyle:{
+                    color:"rgba(0,0,0,0.6)",
+                    fontSize: 15,
+                }
+            },
+            // Declare several bar series, each will be mapped
+            // to a column of dataset.source by default.
+            series: [
+                {
+                    name: '未复购',
+                    type: 'bar',
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: label0
+                },
+                {
+                    name: '复购',
+                    type: 'bar',
+                    // label: {
+                    //   show: true
+                    // },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: label1
+                }
+            ]
+        };
+        option && myChart.setOption(option);
+    })
+    window.addEventListener("resize", function() {
+        myChart.resize();
+    });
+</script>
+</body>
+</html>

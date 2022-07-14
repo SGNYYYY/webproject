@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户性别分布</title>
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+</head>
+<body>
+<h1>用户性别分布</h1>
+<div id="pie-gender"  style="width: 1280px;height: 720px"></div>
+<script type="text/javascript">
+    var chartDomGender = document.getElementById('pie-gender');
+    var myChartGender = echarts.init(chartDomGender);
+    $.getJSON("./queryUserGender",function(values){
+        var bufData = []
+        for(var i=0;i<values.data.length;i++){
+            var jsonData ={}
+            jsonData.value = values.data[i]['num']
+            var gender = values.data[i]['gender']
+            if(gender === "1"){
+                jsonData.name = "男"
+            }else if(gender === "0"){
+                jsonData.name = "女"
+            }else{
+                jsonData.name = "未知"
+            }
+
+            bufData.push(jsonData)
+        }
+        option = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [
+                {
+                    name: 'Access From',
+                    type: 'pie',
+                    radius: '50%',
+                    data: bufData,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+
+        option && myChartGender.setOption(option);
+
+    })
+</script>
+</body>
+</html>

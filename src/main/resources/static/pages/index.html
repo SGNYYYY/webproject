@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/index.css" />
+    <script type="text/javascript" src="./js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="./js/echarts.min.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <h1>天猫复购情况</h1>
+      <div class="showTime">当前时间：2022年3月17-0时54分14秒</div>
+      <script>
+        var t = null;
+        t = setTimeout(time, 1000); //開始运行
+        function time() {
+          clearTimeout(t); //清除定时器
+          dt = new Date();
+          var y = dt.getFullYear();
+          var mt = dt.getMonth() + 1;
+          var day = dt.getDate();
+          var h = dt.getHours(); //获取时
+          var m = dt.getMinutes(); //获取分
+          var s = dt.getSeconds(); //获取秒
+          document.querySelector(".showTime").innerHTML =
+            "当前时间：" +
+            y +
+            "年" +
+            mt +
+            "月" +
+            day +
+            "日" +
+            "-" +
+            h +
+            "时" +
+            m +
+            "分" +
+            s +
+            "秒";
+          t = setTimeout(time, 1000); //设定定时器，循环运行
+        }
+      </script>
+    </header>
+    <section class="mainbox">
+      <div class="column">
+        <div class="panel bar">
+          <h2>
+            <a class="linkTo" href="barAge">年龄占比</a>
+          </h2>
+          <div id="bar-age" class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line">
+          <h2><a class="linkTo" href="top10UserAction">购买数Top10用户行为</a></h2>
+          <div id="line-userAction" class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel pie">
+          <h2><a class="linkTo" href="userAction">用户行为分布</a></h2>
+          <div id="pie-action" class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="no">
+          <div class="no-hd">
+            <ul>
+              <li class="totalnum">0</li>
+              <li class="label1num">0</li>
+              <script  type="text/javascript">
+                $.getJSON("./queryNum",function(values){
+                  var label0 = 0
+                  var label1 = 0
+                  for(var i=0;i<values.data.length;i++){
+                    if(values.data[i]["label"] === '0'){
+                      label0 = values.data[i]["num"]
+                    }else{
+                      label1 = values.data[i]["num"]
+                    }
+                  }
+                  document.querySelector(".totalnum").innerHTML = label0+label1
+                  document.querySelector(".label1num").innerHTML = label1
+                })
+              </script>
+            </ul>
+          </div>
+          <div class="no-bd">
+            <ul>
+              <li>购买过的用户数</li>
+              <li>复购过的用户数</li>
+            </ul>
+          </div>
+        </div>
+        <div class="btn-linkTo">
+          <ul>
+          <li><a class="linkTo" href="userGenderLabel">用户性别与复购情况</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="userAgeLabel">用户年龄与复购情况</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="userBrowseDays">用户浏览天数统计</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="top10UserLabel">购买数Top10用户复购情况</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="userTotalLogs">交互次数对应的用户数量</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="userOneClicks">用户单击次数统计</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="userShoppingCarts">用户加购次数统计</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="userPurchaseTimes">用户购买次数统计</a></li>
+          </ul>
+          <ul>
+            <li><a  class="linkTo" href="userFavouriteTimes">用户收藏次数统计</a></li>
+          </ul>
+
+          <div class="footer" height="20" style="color:rgba(194,194,194,0.8)">
+            <marquee direction="left" onmouseover="this.stop()" onmouseleave="this.start()">©版权所有 东北象限™</marquee>
+          </div>
+
+
+        </div>
+      </div>
+      <div class="column">
+        <div class="panel bar1">
+          <h2><a class="linkTo" href="pieGender">性别分布</a></h2>
+          <div id="pie-gender" class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel line1">
+          <h2><a class="linkTo" href="top10SellerMutual">销量Top10商家交互操作</a></h2>
+          <div id="bar-action" class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+        <div class="panel pie1">
+          <h2><a class="linkTo" href="top10SellerLabel">销量Top10商家复购情况</a></h2>
+          <div id="bar-sellerLabel" class="chart"></div>
+          <div class="panel-footer"></div>
+        </div>
+      </div>
+
+
+    </section>
+    <script src="js/flexible.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/china.js"></script>
+    <script src="js/myMap.js"></script>
+  </body>
+</html>
